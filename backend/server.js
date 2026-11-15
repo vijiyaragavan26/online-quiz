@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const seedDB = require('./config/seedData');
@@ -33,17 +34,29 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount Routes
+// Mount API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/quizzes', require('./routes/quizRoutes'));
 app.use('/api/attempts', require('./routes/attemptRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
-// 404 Not Found Handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Endpoint ${req.originalUrl} not found on this server.`
+// Serve Frontend Static Build if present
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
+
+// For any non-API route, send index.html (SPA client-side routing)
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  const indexPath = path.join(frontendDist, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      res.status(404).json({
+        success: false,
+        message: `Endpoint ${req.originalUrl} not found.`
+      });
+    }
   });
 });
 
@@ -51,10 +64,10 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // Start listening immediately
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`===============================================`);
-  console.log(`🚀 QuizMaster Backend API is live on port ${PORT}`);
-  console.log(`🌐 Base URL: http://localhost:${PORT}`);
+  console.log(`🚀 QuizMaster Full-Stack App is live on port ${PORT}`);
+  console.log(`🌐 Web UI:   http://localhost:${PORT}`);
   console.log(`🔍 Health:   http://localhost:${PORT}/api/health`);
   console.log(`===============================================`);
 });
