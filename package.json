@@ -1,0 +1,15 @@
+{
+  "name": "quizmaster-platform",
+  "version": "1.0.0",
+  "description": "QuizMaster – Modern Online Quiz Maker Platform (MERN Stack)",
+  "scripts": {
+    "start": "node backend/server.js",
+    "backend": "cd backend && node server.js",
+    "backend:dev": "cd backend && node --watch server.js",
+    "frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["quiz", "quizmaster", "react", "nodejs", "express", "mongodb", "mern", "codsoft"],
+  "author": "CodSoft Intern",
+  "license": "MIT"
+}
