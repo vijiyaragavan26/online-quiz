@@ -5,7 +5,7 @@ const getBaseUrl = () => {
     return import.meta.env.VITE_API_URL;
   }
   if (typeof window !== 'undefined' && window.location.port === '5173') {
-    return 'http://localhost:5001/api';
+    return 'http://localhost:5005/api';
   }
   return '/api';
 };
